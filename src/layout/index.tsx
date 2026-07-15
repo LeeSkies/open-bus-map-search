@@ -1,60 +1,43 @@
-import { MenuOutlined } from '@ant-design/icons'
-import IconButton from '@mui/material/IconButton'
-import { Layout } from 'antd'
+import MenuIcon from '@mui/icons-material/Menu'
+import { Box, IconButton } from '@mui/material'
 import { Suspense, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet } from 'react-router'
-import styled from 'styled-components'
 import { EasterEgg } from 'src/pages/components/EasterEgg/EasterEgg'
 import { Envelope } from 'src/pages/components/EasterEgg/Envelope'
 import Preloader from 'src/shared/Preloader'
 import AppFooter from './AppFooter'
+import { MAIN_SCROLL_CONTAINER_ID } from './constants'
 import LayoutContext, { LayoutContextInterface, LayoutCtx } from './LayoutContext'
 import SideBar from './sidebar/SideBar'
 import { useTheme } from './ThemeContext'
-
-const { Content } = Layout
-
-const StyledLayout = styled(Layout)`
-  height: 100vh;
-  overflow: hidden;
-`
-const StyledContent = styled(Content)`
-  margin: 24px 16px 0;
-  overflow: auto;
-`
-const StyledBody = styled.div`
-  padding: 0 24px;
-  min-height: 360px;
-`
+import './layout.scss'
 
 const MobileMenuButton = () => {
   const { setDrawerOpen } = useContext<LayoutContextInterface>(LayoutCtx)
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { currentLanguage } = useTheme()
-  const direction = i18n.dir(currentLanguage)
 
   return (
     <IconButton
-      className="hideOnDesktop"
-      dir={direction}
-      onClick={() => setDrawerOpen(true)}
-      sx={{ position: 'fixed', top: 8, insetInlineStart: 8, insetInlineEnd: 'auto', zIndex: 1000 }}
-      size="small">
-      <MenuOutlined />
+      aria-label={t('navigation_open')}
+      className="mobile-menu-button hideOnDesktop"
+      dir={i18n.dir(currentLanguage)}
+      onClick={() => setDrawerOpen(true)}>
+      <MenuIcon />
     </IconButton>
   )
 }
 
 export function MainLayout() {
   return (
-    <StyledLayout className="main">
+    <Box className="main app-layout" sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <LayoutContext>
         <MobileMenuButton />
         <SideBar />
-        <Layout>
-          <StyledContent id="main-content">
-            <StyledBody>
+        <Box className="app-layout-main">
+          <Box className="app-content" component="main" id={MAIN_SCROLL_CONTAINER_ID}>
+            <Box className="app-content-body">
               <Suspense fallback={<Preloader />}>
                 <Outlet />
                 <EasterEgg code="storybook">
@@ -73,11 +56,11 @@ export function MainLayout() {
                   </Link>
                 </EasterEgg>
               </Suspense>
-            </StyledBody>
-          </StyledContent>
+            </Box>
+          </Box>
           <AppFooter />
-        </Layout>
+        </Box>
       </LayoutContext>
-    </StyledLayout>
+    </Box>
   )
 }

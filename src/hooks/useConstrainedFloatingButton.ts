@@ -1,4 +1,5 @@
 import { RefObject, useEffect } from 'react'
+import { MAIN_SCROLL_CONTAINER_ID } from 'src/layout/constants'
 
 export function useConstrainedFloatingButton(
   mapContainerRef: RefObject<HTMLDivElement | null>,
@@ -110,10 +111,8 @@ export function useConstrainedFloatingButton(
       intersectionObserver.observe(mapContainerRef.current)
     }
 
-    window.document
-      .getElementsByClassName('ant-layout-content')
-      .item(0)
-      ?.addEventListener('scroll', updateButtonPosition)
+    const scrollContainer = window.document.getElementById(MAIN_SCROLL_CONTAINER_ID)
+    scrollContainer?.addEventListener('scroll', updateButtonPosition)
     window.addEventListener('resize', updateButtonPosition)
 
     const dirObserver = new MutationObserver(updateButtonPosition)
@@ -124,10 +123,7 @@ export function useConstrainedFloatingButton(
         intersectionObserver.disconnect()
       }
       dirObserver.disconnect()
-      window.document
-        .getElementsByClassName('ant-layout-content')
-        .item(0)
-        ?.removeEventListener('scroll', updateButtonPosition)
+      scrollContainer?.removeEventListener('scroll', updateButtonPosition)
       window.removeEventListener('resize', updateButtonPosition)
     }
   }, [mapContainerRef, buttonRef, isExpanded])
