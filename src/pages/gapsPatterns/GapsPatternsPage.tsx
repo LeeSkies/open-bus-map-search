@@ -1,5 +1,11 @@
-import { Alert, CircularProgress, Grid } from '@mui/material'
-import { Radio, RadioChangeEvent } from 'antd'
+import {
+  Alert,
+  CircularProgress,
+  FormControlLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+} from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import {
@@ -71,7 +77,7 @@ const CustomTooltip = ({ active, payload }: TooltipContentProps) => {
   return null
 }
 
-function GapsByHour({ lineRef, operatorRef, fromDate, toDate }: BusLineStatisticsProps) {
+export function GapsByHour({ lineRef, operatorRef, fromDate, toDate }: BusLineStatisticsProps) {
   const [sortingMode, setSortingMode] = useState<'hour' | 'severity'>('hour')
   const hourlyData = useGapsList(fromDate, toDate, operatorRef, lineRef, sortingMode)
   const isLoading = !hourlyData.length
@@ -88,15 +94,25 @@ function GapsByHour({ lineRef, operatorRef, fromDate, toDate }: BusLineStatistic
           <SkeletonLoader active />
         ) : (
           <>
-            <Radio.Group
-              style={{ marginBottom: '10px' }}
-              onChange={(e: RadioChangeEvent) =>
-                setSortingMode(e.target.value as 'hour' | 'severity')
-              }
-              value={sortingMode}>
-              <Radio.Button value="hour">{t('order_by_hour')}</Radio.Button>
-              <Radio.Button value="severity">{t('order_by_severity')} </Radio.Button>
-            </Radio.Group>
+            <RadioGroup
+              row
+              aria-label={`${t('order_by_hour')} / ${t('order_by_severity')}`}
+              value={sortingMode}
+              onChange={(_, value) => setSortingMode(value as 'hour' | 'severity')}
+              sx={{ mb: 1.25, flexWrap: 'wrap' }}>
+              <FormControlLabel
+                value="hour"
+                control={<Radio />}
+                label={t('order_by_hour')}
+                sx={{ minHeight: 40 }}
+              />
+              <FormControlLabel
+                value="severity"
+                control={<Radio />}
+                label={t('order_by_severity')}
+                sx={{ minHeight: 40 }}
+              />
+            </RadioGroup>
             <ResponsiveContainer width="100%" height={hourlyData.length * 50}>
               <ComposedChart
                 layout="vertical"
