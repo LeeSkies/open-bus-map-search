@@ -3,14 +3,22 @@
 }
 
 .container {
+  --homepage-bus-cloud: #ebf2f9;
+  --homepage-bus-floor: #283250;
+
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 
-  img {
+  .bus-image {
+    display: inline-flex;
+  }
+
+  .bus-image svg {
     height: 15rem;
+    width: auto;
   }
 
   h1 {
@@ -21,6 +29,11 @@
     margin-bottom: 2rem;
     font-size: large;
   }
+}
+
+.dark .container {
+  --homepage-bus-cloud: #1e2230;
+  --homepage-bus-floor: #89b;
 }
 
 .links {
