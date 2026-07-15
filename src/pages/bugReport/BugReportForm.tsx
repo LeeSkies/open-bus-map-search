@@ -26,7 +26,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 import { EasterEgg } from 'src/pages/components/EasterEgg/EasterEgg'
-import InfoYoutubeModal from 'src/pages/components/YoutubeModal'
+import { VideoIconTrigger } from 'src/pages/components/VideoIconTrigger'
 import { useCreateIssueMutation } from 'src/queries/issues'
 import Widget from 'src/shared/Widget'
 import './BugReportForm.scss'
@@ -155,7 +155,7 @@ const BugReportForm = () => {
         title={
           <p className="logo">
             {t('website_name')}
-            <InfoYoutubeModal
+            <VideoIconTrigger
               label={t('open_video_about_this_page')}
               title={t('youtube_modal_info_title')}
               videoUrl="https://www.youtube-nocookie.com/embed?v=F6sD9Bz4Xj0&list=PL6Rh06rT7uiX1AQE-lm55hy-seL3idx3T&index=11"

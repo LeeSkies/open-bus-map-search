@@ -8,7 +8,6 @@ const VIDEO_SRC =
 const BUG_BUTTON_LABEL = 'bug'
 const SVG_LOCATOR = 'svg'
 const IFRAME_LOCATOR = 'iframe'
-const CLOSE_BUTTON_LABEL = 'Close'
 const SRC_ATTRIBUTE = 'src'
 
 // Route matchers for hermetic network mocking.
@@ -47,19 +46,19 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('An instruction video for Report a bug', async ({ page }) => {
-  // Block the external embed so the test stays hermetic; we assert the modal
-  // wiring, not YouTube playback.
-  await page.route(YOUTUBE_EMBED_PATTERN, (route) => route.abort())
+  await page.route(YOUTUBE_EMBED_PATTERN, (route) =>
+    route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body></body></html>' }),
+  )
 
   await page.getByLabel(BUG_BUTTON_LABEL).locator(SVG_LOCATOR).click()
-  await page.getByLabel(i18next.t('open_video_about_this_page')).locator(SVG_LOCATOR).click()
+  await page.getByRole('button', { name: i18next.t('open_video_about_this_page') }).click()
 
   const videoFrame = page.locator(IFRAME_LOCATOR)
   await expect(videoFrame).toBeVisible()
   await expect(videoFrame).toHaveAttribute(SRC_ATTRIBUTE, VIDEO_SRC)
 
-  await page.getByLabel(CLOSE_BUTTON_LABEL, { exact: true }).click()
-  await expect(videoFrame).toBeHidden() // destroyOnHidden unmounts the iframe
+  await page.locator('.MuiBackdrop-root').click({ position: { x: 5, y: 5 } })
+  await expect(videoFrame).toBeHidden()
 })
 
 test('bug missing field - request type', async ({ page }) => {
