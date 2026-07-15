@@ -173,7 +173,10 @@ export const setupTest = async (page: Page, lng: string = 'he') => {
 }
 
 export const visitPage = async (page: Page, label: (typeof PAGES)[number]['label']) => {
-  const link = page.getByText(i18next.t(label), { exact: true }).and(page.getByRole('link'))
+  const link = page
+    .locator('[data-sidebar-menu-item]')
+    .filter({ hasText: i18next.t(label) })
+    .first()
   const href = await link.getAttribute('href')
   // Register waitForURL before clicking to avoid missing fast client-side navigations
   const navigationPromise = href

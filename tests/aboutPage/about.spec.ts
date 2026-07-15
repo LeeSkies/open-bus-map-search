@@ -10,8 +10,9 @@ test.describe('About Page Tests', () => {
   test('after clicking "about" menu item, user should redirect to "about" page', async ({
     page,
   }) => {
-    const locator = page.getByRole('menuitem', { name: /אודות/ })
-    await expect(locator).toHaveClass(/menu-item-selected/)
+    const locator = page.getByRole('navigation').getByRole('link', { name: /אודות/ })
+    await expect(locator).toHaveAttribute('aria-current', 'page')
+    await expect(locator).toHaveClass(/Mui-selected/)
   })
 
   test('page title should be `מהו אתר “דאטאבוס”?`', async ({ page }) => {
