@@ -36,6 +36,15 @@ test.describe('Share URL feature', () => {
     await expect(page.locator('[aria-label="העתק קישור"]')).toBeVisible()
   })
 
+  test('share button confirms a successful copy', async ({ page }) => {
+    const shareButton = page.getByRole('button', { name: 'העתק קישור' })
+
+    await shareButton.click()
+
+    await expect(page.getByRole('button', { name: 'הקישור הועתק!' })).toBeVisible()
+    await expect(page.getByRole('tooltip')).toContainText('הקישור הועתק!')
+  })
+
   test('share button is visible after navigating to gaps page', async ({ page }) => {
     await visitPage(page, 'gaps_page_title')
     await expect(page.locator('[aria-label="העתק קישור"]')).toBeVisible()

@@ -1,6 +1,6 @@
-import { GlobalOutlined } from '@ant-design/icons'
-import IconButton from '@mui/material/IconButton'
-import { Dropdown, type MenuProps } from 'antd'
+import LanguageIcon from '@mui/icons-material/Language'
+import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../ThemeContext'
 
@@ -11,37 +11,47 @@ const languages = [
   { key: 'ar', label: 'العربية' },
 ]
 
-const LangLabel = ({ label }: { label: string }) => (
-  <div aria-label={label}>
-    <span>{label}</span>
-  </div>
-)
-
-const languageOptions: MenuProps['items'] = languages.map(({ key, label }) => ({
-  key,
-  label: <LangLabel label={label} />,
-}))
-
 export const LanguageToggleButton = () => {
   const { setLanguage, currentLanguage } = useTheme()
   const { t } = useTranslation()
+  const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null)
+  const menuOpen = Boolean(anchorElement)
 
-  const handleLanguageChange: MenuProps['onClick'] = ({ key }) => {
+  const handleLanguageChange = (key: string) => {
     setLanguage(key)
+    setAnchorElement(null)
   }
 
   return (
-    <Dropdown
-      menu={{
-        items: languageOptions,
-        onClick: handleLanguageChange,
-        selectedKeys: [currentLanguage],
-      }}
-      trigger={['click']}
-      placement="bottomRight">
-      <IconButton size="small" aria-label={t('change_language')} title={t('change_language')}>
-        <GlobalOutlined />
-      </IconButton>
-    </Dropdown>
+    <>
+      <Tooltip title={t('change_language')}>
+        <IconButton
+          size="small"
+          aria-label={t('change_language')}
+          aria-controls={menuOpen ? 'language-menu' : undefined}
+          aria-expanded={menuOpen ? 'true' : undefined}
+          aria-haspopup="menu"
+          onClick={(event) => setAnchorElement(event.currentTarget)}
+          sx={{ minWidth: 40, minHeight: 40 }}>
+          <LanguageIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        id="language-menu"
+        anchorEl={anchorElement}
+        open={menuOpen}
+        onClose={() => setAnchorElement(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        {languages.map(({ key, label }) => (
+          <MenuItem
+            key={key}
+            selected={key === currentLanguage}
+            onClick={() => handleLanguageChange(key)}>
+            {label}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
   )
 }
