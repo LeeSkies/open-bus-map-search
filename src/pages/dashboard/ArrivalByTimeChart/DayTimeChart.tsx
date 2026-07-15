@@ -1,4 +1,4 @@
-import { Radio, RadioChangeEvent } from 'antd'
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GroupByRes, useGroupBy } from 'src/api/groupByService'
@@ -60,13 +60,25 @@ const DayTimeChart: FC<DayTimeChartProps> = ({
 
   return (
     <Widget title={t(`dashboard_page_graph_title_${groupByHour ? 'hour' : 'day'}`)} marginBottom>
-      <Radio.Group
-        style={{ marginBottom: '10px' }}
-        onChange={(e: RadioChangeEvent) => setGroupByHour(e.target.value === 'byHour')}
-        defaultValue="byDay">
-        <Radio.Button value="byDay">{t('group_by_day_tooltip_content')}</Radio.Button>
-        <Radio.Button value="byHour">{t('group_by_hour_tooltip_content')}</Radio.Button>
-      </Radio.Group>
+      <RadioGroup
+        row
+        aria-label={`${t('group_by_day_tooltip_content')} / ${t('group_by_hour_tooltip_content')}`}
+        value={groupByHour ? 'byHour' : 'byDay'}
+        onChange={(_, value) => setGroupByHour(value === 'byHour')}
+        sx={{ mb: 1.25, flexWrap: 'wrap' }}>
+        <FormControlLabel
+          value="byDay"
+          control={<Radio />}
+          label={t('group_by_day_tooltip_content')}
+          sx={{ minHeight: 40 }}
+        />
+        <FormControlLabel
+          value="byHour"
+          control={<Radio />}
+          label={t('group_by_hour_tooltip_content')}
+          sx={{ minHeight: 40 }}
+        />
+      </RadioGroup>
       {loadingGraph ? (
         <SkeletonLoader active />
       ) : (
