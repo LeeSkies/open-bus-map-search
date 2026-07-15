@@ -13,7 +13,9 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('Public Appeal page items', async ({ page }) => {
+  await expect(page.getByRole('heading', { level: 1, name: 'קול קורא' })).toBeVisible()
   await expect(page.locator('h2')).toContainText(PUBLIC_APPEAL_ITEMS)
+  await expect(page.locator('h2')).toHaveCount(PUBLIC_APPEAL_ITEMS.length)
 })
 
 test('the "Open Bus Stride API" link should point to the correct URL', async ({ page }) => {
