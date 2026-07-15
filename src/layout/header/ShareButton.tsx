@@ -1,7 +1,7 @@
-import { CheckOutlined, LinkOutlined } from '@ant-design/icons'
-import IconButton from '@mui/material/IconButton'
-import { Tooltip } from 'antd'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import CheckIcon from '@mui/icons-material/Check'
+import LinkIcon from '@mui/icons-material/Link'
+import { Box, IconButton, Tooltip, Typography } from '@mui/material'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { GlobalSearchContext } from 'src/model/globalState'
@@ -13,6 +13,8 @@ export const ShareButton = () => {
   const { params: pageParams } = useContext(PageShareParamsContext)
   const location = useLocation()
   const [copied, setCopied] = useState(false)
+  const [tooltipOpen, setTooltipOpen] = useState(false)
+  const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const { t } = useTranslation()
 
   const shareUrl = useMemo(
@@ -25,30 +27,45 @@ export const ShareButton = () => {
       .writeText(shareUrl)
       .then(() => {
         setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
+        if (copiedTimer.current) clearTimeout(copiedTimer.current)
+        copiedTimer.current = setTimeout(() => setCopied(false), 2000)
       })
       .catch(() => {
         // clipboard API not available; silent fail
       })
   }, [shareUrl])
 
+  useEffect(
+    () => () => {
+      if (copiedTimer.current) clearTimeout(copiedTimer.current)
+    },
+    [],
+  )
+
   const tooltipTitle = copied ? (
-    <span>{t('link_copied')}</span>
+    t('link_copied')
   ) : (
-    <span>
-      {t('share_link')}
-      <br />
-      <span style={{ opacity: 0.75, fontSize: '0.85em', wordBreak: 'break-all' }}>{shareUrl}</span>
-    </span>
+    <Box>
+      <Typography variant="body2">{t('share_link')}</Typography>
+      <Typography variant="caption" sx={{ opacity: 0.75, overflowWrap: 'anywhere' }}>
+        {shareUrl}
+      </Typography>
+    </Box>
   )
 
   return (
-    <Tooltip title={tooltipTitle} open={copied || undefined} placement="bottomRight">
+    <Tooltip
+      title={tooltipTitle}
+      open={copied || tooltipOpen}
+      onOpen={() => setTooltipOpen(true)}
+      onClose={() => setTooltipOpen(false)}
+      placement="bottom-end">
       <IconButton
         size="small"
         onClick={handleShare}
-        aria-label={copied ? t('link_copied') : t('share_link')}>
-        {copied ? <CheckOutlined /> : <LinkOutlined />}
+        aria-label={copied ? t('link_copied') : t('share_link')}
+        sx={{ minWidth: 40, minHeight: 40 }}>
+        {copied ? <CheckIcon fontSize="small" /> : <LinkIcon fontSize="small" />}
       </IconButton>
     </Tooltip>
   )
