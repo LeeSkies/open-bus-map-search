@@ -6,11 +6,6 @@ import rtlPlugin from '@mui/stylis-plugin-rtl'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { enUS as dateEnUS, heIL as dateHeIL, ruRU as dateRuRU } from '@mui/x-date-pickers/locales'
-import { theme as antdlgorithm, ConfigProvider, ConfigProviderProps } from 'antd'
-import antdArEG from 'antd/es/locale/ar_EG'
-import antdEnUS from 'antd/es/locale/en_US'
-import antdHeIL from 'antd/es/locale/he_IL'
-import antdRuRU from 'antd/es/locale/ru_RU'
 import {
   createContext,
   PropsWithChildren,
@@ -148,39 +143,14 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
     )
   }, [isDarkTheme, language])
 
-  const antdTheme = useMemo<ConfigProviderProps>(() => {
-    const langConfig = {
-      he: { direction: 'rtl', locale: antdHeIL },
-      en: { direction: 'ltr', locale: antdEnUS },
-      ru: { direction: 'ltr', locale: antdRuRU },
-      ar: { direction: 'rtl', locale: antdArEG },
-    } as const
-
-    const { direction, locale } = langConfig[language as keyof typeof langConfig] || langConfig.he
-
-    return {
-      direction,
-      locale,
-      theme: {
-        algorithm: isDarkTheme ? antdlgorithm.darkAlgorithm : antdlgorithm.defaultAlgorithm,
-        token: {
-          colorBgBase: isDarkTheme ? '#1c1d1c' : '#ffffff',
-          colorTextBase: isDarkTheme ? '#ffffff' : '#000000',
-        },
-      },
-    }
-  }, [isDarkTheme, language])
-
   return (
     <CacheProvider value={emotionCache}>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
-        <ConfigProvider {...antdTheme}>
-          <MuiThemeProvider theme={muiTheme}>
-            <ScopedCssBaseline enableColorScheme>
-              <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>
-            </ScopedCssBaseline>
-          </MuiThemeProvider>
-        </ConfigProvider>
+        <MuiThemeProvider theme={muiTheme}>
+          <ScopedCssBaseline enableColorScheme>
+            <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>
+          </ScopedCssBaseline>
+        </MuiThemeProvider>
       </LocalizationProvider>
     </CacheProvider>
   )

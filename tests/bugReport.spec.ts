@@ -5,8 +5,6 @@ const VIDEO_SRC =
   'https://www.youtube-nocookie.com/embed?v=F6sD9Bz4Xj0&list=PL6Rh06rT7uiX1AQE-lm55hy-seL3idx3T&index=11'
 
 // Locators / accessible names used to drive the Report-a-bug UI.
-const BUG_BUTTON_LABEL = 'bug'
-const SVG_LOCATOR = 'svg'
 const IFRAME_LOCATOR = 'iframe'
 const SRC_ATTRIBUTE = 'src'
 
@@ -50,7 +48,7 @@ test('An instruction video for Report a bug', async ({ page }) => {
     route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body></body></html>' }),
   )
 
-  await page.getByLabel(BUG_BUTTON_LABEL).locator(SVG_LOCATOR).click()
+  await page.getByRole('button', { name: i18next.t('report_a_bug_title') }).click()
   await page.getByRole('button', { name: i18next.t('open_video_about_this_page') }).click()
 
   const videoFrame = page.locator(IFRAME_LOCATOR)
@@ -63,7 +61,7 @@ test('An instruction video for Report a bug', async ({ page }) => {
 
 test('bug missing field - request type', async ({ page }) => {
   await test.step('Open bug report modal', async () => {
-    await page.getByLabel(BUG_BUTTON_LABEL).locator(SVG_LOCATOR).click()
+    await page.getByRole('button', { name: i18next.t('report_a_bug_title') }).click()
   })
 
   await test.step('Fill required fields', async () => {
@@ -120,7 +118,7 @@ test('bug submission success', async ({ page }) => {
   })
 
   await test.step('Open bug report modal', async () => {
-    await page.getByLabel(BUG_BUTTON_LABEL).locator(SVG_LOCATOR).click()
+    await page.getByRole('button', { name: i18next.t('report_a_bug_title') }).click()
   })
 
   await test.step('Fill all required fields', async () => {
@@ -161,7 +159,7 @@ test('bug submission server error', async ({ page }) => {
   })
 
   await test.step('Open bug report modal', async () => {
-    await page.getByLabel(BUG_BUTTON_LABEL).locator(SVG_LOCATOR).click()
+    await page.getByRole('button', { name: i18next.t('report_a_bug_title') }).click()
   })
 
   await test.step('Fill all required fields', async () => {
