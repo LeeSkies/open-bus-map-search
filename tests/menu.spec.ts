@@ -7,6 +7,7 @@ const MENU_ITEMS = [
   'נסיעות שלא בוצעו',
   'דפוסי נסיעות שלא בוצעו',
   'חברה מפעילה',
+  'רכב',
   'מפת תחבורה',
   'מפת מהירות',
   'קול קורא',
@@ -20,7 +21,10 @@ test.beforeEach(async ({ page }) => {
 
 test('should display logo and menu items correctly', async ({ page }) => {
   await expect(page.locator('h1.sidebar-logo')).toContainText('דאטאבוס')
-  await expect(page.locator('ul > li a')).toContainText(MENU_ITEMS)
+  const menu = page.locator('.sidebar-menu:visible')
+  for (const label of MENU_ITEMS) {
+    await expect(menu.getByText(label, { exact: true })).toBeVisible()
+  }
 })
 
 test("the sidebar footer doesn't show duplicate icons", async ({ page }) => {

@@ -1,75 +1,100 @@
 @use '../../../resources/variables' as *;
 
 .sidebar-menu {
-  border-inline-end: 0 !important;
-  padding: 8px 10px 12px;
+  padding: 8px 10px 12px !important;
 
-  .ant-menu-item-group {
+  .sidebar-menu-group {
     margin-bottom: 10px;
   }
 
-  .ant-menu-item-group-title {
-    padding: 8px 12px 6px !important;
+  .sidebar-menu-group-title {
+    padding: 8px 12px 6px;
     font-size: 11px;
     font-weight: 700;
+    line-height: 1.5;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgb(0 0 0 / 45%);
+    background: transparent;
   }
 
-  .sidebar-menu-group-title {
-    display: block;
-  }
-
-  .ant-menu-item-group-list {
-    margin: 0 !important;
-  }
-
-  .ant-menu-item {
-    height: 44px;
+  .sidebar-menu-item {
     width: 100%;
-    margin: 0 0 4px !important;
-    line-height: 44px;
+    min-height: 44px;
+    margin-bottom: 4px;
+    padding: 8px 12px;
     border-radius: 10px;
+    color: inherit;
+    gap: 10px;
+    transition-property: background-color, color, transform;
+    transition-duration: 150ms;
+
+    &:active {
+      transform: scale(0.96);
+    }
+
+    &.Mui-selected {
+      color: #1677ff;
+      background-color: $color-active;
+    }
+
+    &.Mui-selected:hover {
+      background-color: $color-active;
+    }
   }
 
-  .ant-menu-item-selected {
-    background-color: $color-active !important;
-    color: #1677ff !important;
+  .sidebar-menu-item-icon {
+    min-width: 20px;
+    color: inherit;
+
+    > svg {
+      font-size: 20px;
+    }
   }
 
-  .ant-menu-item a {
-    display: inline-flex;
-    align-items: center;
-    width: 100%;
-  }
-
-  .ant-menu-item .ant-menu-title-content {
+  .sidebar-menu-item-text {
     min-width: 0;
+    margin: 0;
+
+    .MuiListItemText-primary {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.sidebar-menu.sidebar-menu-collapsed {
+  padding-inline: 8px !important;
+
+  .sidebar-menu-item {
+    justify-content: center;
+    min-width: 44px;
+    padding-inline: 12px;
   }
 
-  .ant-menu-item .ant-menu-title-content a {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .sidebar-menu-item-icon {
+    justify-content: center;
+  }
+
+  .sidebar-menu-item-text {
+    display: none;
   }
 }
 
 .hackathon-badge {
   display: inline-block;
-  font-size: 10px;
-  background: #e6f4ff;
-  color: #1677ff;
-  border-radius: 4px;
   padding: 1px 5px;
   margin-inline-start: 6px;
+  font-size: 10px;
   font-weight: 700;
   line-height: 1.5;
+  color: #1677ff;
   vertical-align: middle;
+  background: #e6f4ff;
+  border-radius: 4px;
 }
 
-.dark .sidebar-menu {
-  .ant-menu-item-group-title {
-    color: rgb(255 255 255 / 65%);
-  }
+.dark .sidebar-menu .sidebar-menu-group-title {
+  color: rgb(255 255 255 / 65%);
 }
